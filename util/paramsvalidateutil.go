@@ -1,6 +1,8 @@
 package util
 
-import ()
+import (
+    "regexp"
+)
 
 func ValidateUsernamePassword(username string, password string) (bool, string) {
     //username
@@ -17,6 +19,18 @@ func ValidateUsernamePassword(username string, password string) (bool, string) {
         errmsg = "username length > 15"
         return false, errmsg
     }
+    //username regexp
+    re, err := regexp.Compile(USERNAMEREG)
+    if err != nil {
+        errmsg = "match error"
+        return false, errmsg
+    }
+    ok := re.MatchString(username)
+    if !ok {
+        errmsg = "username not right format,need telnum"
+        return false, errmsg
+    }
+
     //password
     if password == "" {
         errmsg = "empty password"
@@ -30,8 +44,17 @@ func ValidateUsernamePassword(username string, password string) (bool, string) {
         errmsg = "password length > 15"
         return false, errmsg
     }
-    //username and password not contains special word
-    //if
+    //password regexp
+    re, err = regexp.Compile(PASSWORDREG)
+    if err != nil {
+        errmsg = "match error"
+        return false, errmsg
+    }
+    ok = re.MatchString(password)
+    if !ok {
+        errmsg = "password not right format,need mix Aa0 and !#~$*+_"
+        return false, errmsg
+    }
 
     return true, ""
 }
